@@ -1,0 +1,42 @@
+.env
+
+migrations
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of go build
+/build/
+bin/
+*.out
+
+# Vendor dependencies (if you're using vendoring)
+vendor/
+
+# Go workspaces (Go 1.18+)
+go.work
+go.work.sum
+
+# Go modules
+go.sum
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Coverage tools
+coverage.out
+
+# Logs
+*.log
