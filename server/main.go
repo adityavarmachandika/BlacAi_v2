@@ -4,14 +4,12 @@ import (
 	"BlacAi/internal/db"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
-	db_conn,err:=db.InitDb()
+	router:=gin.Default()
 
-	if err != nil{
-		fmt.Println("there is an err", err)
-	}
-	fmt.Println(db_conn)
+	
 }

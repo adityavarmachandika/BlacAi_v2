@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type UserDetails struct {
@@ -21,8 +20,8 @@ type UserDetails struct {
 
 type AuthProviderDetails struct {
 	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-	UserId uuid.UUID `gorm:"foreignKey:UserID;references:ID"`
+	UserId uuid.UUID `gorm:"type:uuid"`
 	ProviderId string `gorm:"unique"`
 	ProviderName string
-    User   UserDetails `gorm:"foreignKey:UserID"`
+    User   UserDetails `gorm:"foreignKey:UserId;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
