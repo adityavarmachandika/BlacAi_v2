@@ -1,27 +1,12 @@
 package models
 
-import (
-	"time"
 
-	"github.com/google/uuid"
-)
 
-type UserDetails struct {
-
-	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-	Email string `gorm:"unique"`
-	HashedPassword string
-	PhoneNumber string
-	FirstName string
-	LastName string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+type UserSignupInput struct{
+	Email string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required,min=8"`
+	PhoneNumber string `json:"phonenumber" binding:"required,e164"`
+	FirstName string `json:"firstname" binding:"required"`
+	LastName string `json:"lastname" binding:"required"`
 }
 
-type AuthProviderDetails struct {
-	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-	UserId uuid.UUID `gorm:"type:uuid"`
-	ProviderId string `gorm:"unique"`
-	ProviderName string
-    User   UserDetails `gorm:"foreignKey:UserId;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-}

@@ -14,13 +14,13 @@ var DB *gorm.DB
 func InitDb()( error){
 
 	godotenv.Load("../.env")
-
+	
 	conn_string:=os.Getenv("DATABASE_URL")
 
 	var err error
 	DB,err=gorm.Open(postgres.Open(conn_string), &gorm.Config{})
 
-	fmt.Println(DB)
+	fmt.Println("db connected")
 	if err !=nil {
 		return err;
 	}
