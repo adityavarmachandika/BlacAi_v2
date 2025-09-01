@@ -14,7 +14,7 @@ var DB *gorm.DB
 func InitDb()( error){
 
 	godotenv.Load("../.env")
-	
+
 	conn_string:=os.Getenv("DATABASE_URL")
 
 	var err error
