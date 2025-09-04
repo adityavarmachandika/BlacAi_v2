@@ -8,21 +8,23 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
 
 
-func InitDb()( error){
-
+func InitDb()(*gorm.DB, error){
+	
+	var DB *gorm.DB
 	godotenv.Load("../.env")
 
 	conn_string:=os.Getenv("DATABASE_URL")
 
 	var err error
-	DB,err=gorm.Open(postgres.Open(conn_string), &gorm.Config{})
+	DB,err=gorm.Open(postgres.Open(conn_string), &gorm.Config{
+		PrepareStmt: false,
+	})
 
 	fmt.Println("db connected")
 	if err !=nil {
-		return err;
+		return nil,err;
 	}
-	return nil
+	return DB,nil
 }

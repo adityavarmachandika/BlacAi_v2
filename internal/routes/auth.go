@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Auth(r *gin.Engine) {
+func Auth(r *gin.Engine,handler controllers.Controller) {
 
-	r.POST("/auth/signup", middleware.SignupMiddleware(),controllers.SignupAuth)
+	r.POST("/auth/signup", middleware.SignupMiddleware(),handler.SignupAuth)
 }

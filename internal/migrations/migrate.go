@@ -10,12 +10,12 @@ import (
 
 func  main(){
 	
-	err:=db.InitDb()
+	db,err:=db.InitDb()
 
 	if err != nil{
 		log.Fatal("db connection failed❌", err)
 	}
-	err= db.DB.AutoMigrate(&models.UserDetails{}, &models.AuthProviderDetails{})
+	err= db.AutoMigrate(&models.UserDetails{}, &models.AuthProviderDetails{})
 
 	if err!= nil{
 		log.Fatal("there is an error while migrating", err)
