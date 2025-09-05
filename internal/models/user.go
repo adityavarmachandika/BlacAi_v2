@@ -10,3 +10,7 @@ type UserSignupInput struct{
 	LastName string `json:"lastname" binding:"required"`
 }
 
+type UserLoginInput struct{
+	Email string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required"`
+}

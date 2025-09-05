@@ -10,4 +10,6 @@ import (
 func Auth(r *gin.Engine,handler controllers.Controller) {
 
 	r.POST("/auth/signup", middleware.SignupMiddleware(),handler.SignupAuth)
+
+	r.POST("/auth/login",middleware.LoginMiddleware(),handler.LoginAuth)
 }

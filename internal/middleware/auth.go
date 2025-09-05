@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//middleware function that checks the biding of he userinput for the signup
+//middleware function that checks the biding of the userinput for the signup
 func SignupMiddleware() gin.HandlerFunc{
 	return func(c *gin.Context) {
 
@@ -25,6 +25,25 @@ func SignupMiddleware() gin.HandlerFunc{
 		}
 
 		c.Set("SignupBody",input)
+		c.Next()
+	}
+}
+
+//-- login middleware to check the binding
+func LoginMiddleware() gin.HandlerFunc{
+	return func(c *gin.Context){
+		var input models.UserLoginInput
+
+		err:= c.ShouldBindJSON(&input)
+
+
+		if err!=nil{
+			c.JSON(http.StatusBadRequest,gin.H{"error":err.Error()})
+			c.Abort()
+			return 
+		}
+
+		c.Set("LoginBody",input)
 		c.Next()
 	}
 }

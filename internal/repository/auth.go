@@ -10,6 +10,7 @@ import (
 type UserRepo interface {
 	GetUserByEmail(email string,ctx context.Context)(models.UserDetails,error)
 	CreateUser(SingUpDetails models.UserSignupInput,ctx context.Context)(models.UserDetails,error)
+	GetProviderById(UserId string,ctx context.Context)(models.AuthProviderDetails,error)
 }
 
 type UserGormRepo struct{
@@ -34,6 +35,18 @@ func (r *UserGormRepo)GetUserByEmail(email string,ctx context.Context)(models.Us
 
 	return user,nil
 }
+
+
+func (r *UserGormRepo)GetProviderById(UserId string,ctx context.Context)(models.AuthProviderDetails,error){
+
+	provider,err:=gorm.G[models.AuthProviderDetails](r.db).Where("user_id = ?", UserId).First(ctx)
+
+	if err !=nil{
+		return models.AuthProviderDetails{},err
+	}
+	return provider,nil
+}
+
 
 func (r *UserGormRepo)CreateUser(SingUpDetails models.UserSignupInput,ctx context.Context)(models.UserDetails,error){
 	
