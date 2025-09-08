@@ -53,13 +53,18 @@ func (cntr *Controller)LoginAuth(c *gin.Context){
 
 	LoginUserData:=LoginUserDataRaw.(models.UserLoginInput)
 
-	IsUserVerified:=cntr.service.VerifyLogin(LoginUserData,c)
+	UserDetails,IsUserVerified:=cntr.service.VerifyLogin(LoginUserData,c)
 
 	if IsUserVerified !=nil{
 		c.JSON(http.StatusForbidden,gin.H{"status-no login":IsUserVerified})
 		return
 	}
 
+	AuthToken,err:=service.CreateJWT(UserDetails.ID.String(),UserDetails.Email,UserDetails.FirstName)
 
-	c.JSON(http.StatusOK,gin.H{"status":"user loged in👍"})
+	if err!=nil{
+		c.JSON(http.StatusForbidden,gin.H{"status-no token":err})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{"status-jwt":AuthToken})
 }

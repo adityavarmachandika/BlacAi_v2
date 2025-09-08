@@ -5,8 +5,11 @@ import (
 	"BlacAi/internal/repository"
 	"context"
 	"errors"
-	"fmt"
+	"os"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -29,7 +32,7 @@ func (u *UserService)CreateUserAcc(user models.UserSignupInput,ctx context.Conte
 	_,err:= u.Repo.GetUserByEmail(user.Email,ctx)
 	
 	if err==nil{
-		return models.UserDetails{},fmt.Errorf("user Already exists")
+		return models.UserDetails{},err
 	}
 
 	//-- if no user found we will recive record not found error. so create a new user
@@ -37,7 +40,7 @@ func (u *UserService)CreateUserAcc(user models.UserSignupInput,ctx context.Conte
 
 		hashedPassword,err:=passwordHashing(user.Password); 
 		if err!=nil{
-			return models.UserDetails{},fmt.Errorf("password unable to hash %w",err)
+			return models.UserDetails{},err
 		}
 
 		user.Password=hashedPassword
@@ -56,33 +59,53 @@ func (u *UserService)CreateUserAcc(user models.UserSignupInput,ctx context.Conte
 }
 
 
-func (u *UserService)VerifyLogin(user models.UserLoginInput,ctx context.Context)(error){
+func (u *UserService)VerifyLogin(user models.UserLoginInput,ctx context.Context)(models.UserDetails,error){
 
 	UserDetails,err:=u.Repo.GetUserByEmail(user.Email,ctx)
 
 	if err!=nil{
 
 		if errors.Is(err,gorm.ErrRecordNotFound){
-			return err
+			return models.UserDetails{},err
 		}
-		return err
+		return models.UserDetails{},err
 	}
 
 	ProviderDetails,err:=u.Repo.GetProviderById(UserDetails.ID.String(),ctx)
 
 	if err!=nil{
-		return err
+		return models.UserDetails{},err
 	}
 
 	IsPasswordValid:=checkPassword(ProviderDetails.HashedPassword,user.Password)
 
 	if IsPasswordValid !=nil{
-		return IsPasswordValid
+		return models.UserDetails{},IsPasswordValid
 	}
-	return nil
+	return UserDetails,nil
 
 }
 
+func CreateJWT(id string,email string,firstname string)(string,error){
+
+	godotenv.Load("../.env")
+	payload:=jwt.MapClaims{
+		"id": id,
+		"email": email,
+		"name": firstname,
+		"exp":time.Now().Add(time.Hour * 24).Unix(),
+	}
+
+	secret:=os.Getenv("JWT_Secret")
+
+	token:=jwt.NewWithClaims(jwt.SigningMethodHS256,payload)
+	tokenStr,err:=token.SignedString([]byte(secret))
+
+	if err!=nil{
+		return "",err
+	}
+	return tokenStr,nil
+}
 
 func passwordHashing(password string)(string,error) {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

@@ -3,7 +3,6 @@ package repository
 import (
 	"BlacAi/internal/models"
 	"context"
-
 	"gorm.io/gorm"
 )
 
