@@ -86,7 +86,7 @@ func (u *UserService)VerifyLogin(user models.UserLoginInput,ctx context.Context)
 
 }
 
-func CreateJWT(id string,email string,firstname string)(string,error){
+func (u * UserService)CreateJWT(id string,email string,firstname string)(string,error){
 
 	godotenv.Load("../.env")
 	payload:=jwt.MapClaims{

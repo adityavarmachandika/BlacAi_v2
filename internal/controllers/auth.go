@@ -18,7 +18,6 @@ func NewControllerService (service service.UserService)Controller{
 }
 
 
-
 func (cntr *Controller) SignupAuth(c *gin.Context){
 
 	
@@ -42,7 +41,6 @@ func (cntr *Controller) SignupAuth(c *gin.Context){
 
 }
 
-
 func (cntr *Controller)LoginAuth(c *gin.Context){
 	LoginUserDataRaw,exists:=c.Get("LoginBody")
 
@@ -59,8 +57,7 @@ func (cntr *Controller)LoginAuth(c *gin.Context){
 		c.JSON(http.StatusForbidden,gin.H{"status-no login":IsUserVerified})
 		return
 	}
-
-	AuthToken,err:=service.CreateJWT(UserDetails.ID.String(),UserDetails.Email,UserDetails.FirstName)
+	AuthToken,err:=cntr.service.CreateJWT(UserDetails.ID.String(),UserDetails.Email,UserDetails.FirstName)
 
 	if err!=nil{
 		c.JSON(http.StatusForbidden,gin.H{"status-no token":err})
@@ -68,3 +65,4 @@ func (cntr *Controller)LoginAuth(c *gin.Context){
 	}
 	c.JSON(http.StatusOK,gin.H{"status-jwt":AuthToken})
 }
+
